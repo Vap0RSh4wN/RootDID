@@ -1,0 +1,16 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+circuits/ptau
+scripts/10.1
+scripts/10.19
+build
+
+# Hardhat files
+cache
+artifacts
+
+

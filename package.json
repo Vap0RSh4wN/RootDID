@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@noble/secp256k1": "^1.3.4",
+    "@personaelabs/spartan-ecdsa": "^2.1.4",
+    "bigint-buffer": "^1.1.5",
+    "chai": "^4.3.7",
+    "circom_tester": "^0.0.19",
+    "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "ethereumjs-util": "^7.1.5",
+    "maci-domainobjs": "^1.1.1"
+  }
+}

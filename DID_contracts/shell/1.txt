@@ -1,0 +1,11 @@
+["0x24a7ff05d5e9c0abcdd5fc8604987edd6651cc69b7bd7380c1bba786dcac615f","0x167add7d95d68be6a315821590e578c790181762e4e01219aa34eb891515b5fd","0x2c6519b723df2d4cb0f090a35d0212577e408e22b77439d8fb340c3e74ac9903","0x0905a488372c5cc91c501ca58fd3626fa45d90233b6bff473fbb2bda11fafe89","0x08a396c654e60c3ff2f265199e71d2d28912b00256eb52885e706c670da01299","0x17d6b8ed572b13ed9a03ce8068ea3a78976fdefcb7a4cdb8be28d04604d074f3","0x05b5fae360d70049a1f908795403cf93cba2880118b0fcf24b68c1e70e6d9aee","0x20dcd9958dfd3cc9eeeb681e148e5f254b480bd4834dda740de039598697fab1"]
+ function verifyProof(uint[] calldata _proof, uint[4] calldata _publicInputs) public view returns (bool) {
+        uint[2] memory _pA;
+        _pA[0] = _proof[0];
+        _pA[1] = _proof[1];
+        uint[2][2] memory _pB;
+        _pB[0] = [_proof[2],_proof[3]];
+        _pB[1] = [_proof[4],_proof[5]];
+        uint[2] memory _pC;
+        _pC[0] = _proof[6];
+        _pC[0] = _proof[7];

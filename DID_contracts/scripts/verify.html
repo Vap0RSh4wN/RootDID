@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Express.js Example</title>
+</head>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+
+    p,
+    img {
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+
+    }
+
+
+    .container {
+        width: 100%;
+        height: 100%;
+    }
+
+    .mainbody {
+        width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        /* Green */
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    #result {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+</style>
+
+<script type="module">
+    import { ethers } from "./ethers-5.6.esm.min.js";
+    window.addEventListener("load", async () => {
+        const connectButton = document.getElementById("connectButton");
+
+        // If the user's browser has MetaMask or another wallet that supports Web3 installed, use ethers.js to connect to the user's wallet
+        if (window.ethereum) {
+            window.provider = new ethers.providers.Web3Provider(window.ethereum);
+            try {
+                // await window.ethereum.enable();
+                if ((await ethereum.request({ method: "eth_accounts" })).length) {
+                    const accounts = (
+                        await ethereum.request({ method: "eth_accounts" })
+                    ).toString();
+                    connectButton.innerHTML = `<image src="./images/MetaMask-Fox.png" id="Fox" width="20px" style="flex: none;margin-right:5px;margin-left:20px;"/> ${accounts.slice(
+                        0,
+                        6
+                    )}...${accounts.slice(-4)}`;
+                    connectButton.style =
+                        "width:200px; background-color: powderblue; color: white;display: flex;align-items: center;text-align:center;";
+                }
+            } catch (error) {
+                console.error("Not Connected!");
+            }
+        } else if (window.web3) {
+            window.provider = new ethers.providers.Web3Provider(
+                window.web3.currentProvider
+            );
+        } else {
+            console.error("No web3 provider detected");
+        }
+
+        connectButton.addEventListener("click", async () => {
+            if (typeof window.ethereum !== "undefined") {
+                await window.ethereum.request({ method: "eth_requestAccounts" });
+                const accounts = (
+                    await ethereum.request({ method: "eth_accounts" })
+                ).toString();
+                connectButton.innerHTML = `<image src="./images/MetaMask-Fox.png" id="Fox" width="20px" style="flex: none;margin-right:5px;margin-left:20px;"/> ${accounts.slice(
+                    0,
+                    6
+                )}...${accounts.slice(-4)}`;
+                connectButton.style =
+                    "width:200px; background-color: powderblue; color: white;display: flex;align-items: center;text-align:center;";
+            } else {
+                connectButton.innerHTML = "Please connect your metamask!";
+            }
+        });
+    });
+</script>
+
+<body>
+    <div class="container">
+        <div class="mainbody">
+
+            <button id="downloadImage">Upload</button>
+            <br></br>
+
+            <br></br>
+            <button id="downloadImage">Verify</button>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
+    <script>
+        $('form#OTP').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+            var formData = $(this).serialize(); // Serialize form data
+            $.ajax({
+                url: $(this).attr('action'), // Use the form's action attribute as the requested URL
+                type: $(this).attr('method'), // Use the method attribute of the form as the request type
+                data: formData,
+                success: function (response) {
+                    document.getElementById('result').innerText = response;
+                    // Process the response data returned by the server here
+                    if (response === 'Result: true') {
+                        document.getElementById('downloadSalt').style.display = ''
+                    }
+                    // You can perform other operations as needed, such as displaying prompt messages, updating pages, etc.
+                },
+                error: function (xhr, status, error) {
+                    console.log(status, error);
+                }
+            });
+        });
+        document.getElementById('downloadImage').addEventListener('click', function () {
+            fetch('http://localhost:3000/downloadImage', {
+                method: 'POST', // 或者 'GET'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('QRcode').src = data.image;
+                    document.getElementById('QRcode').style.display = 'block'
+                });
+        });
+        document.getElementById('downloadSalt').addEventListener('click', function () {
+            start();
+            fetch('http://localhost:3000/downloadSalt', {
+                method: 'POST', // 或者 'GET'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('salt').innerHTML = data.salt;
+                    document.getElementById('salt').style.display = 'block';
+                    stop();
+                });
+        });
+        //初始化变量
+        var hour, minute, second;//时 分 秒
+        hour = minute = second = 0;//初始化
+        var millisecond = 0;//毫秒
+        var int;
+        //重置函数
+        function Reset() {
+            window.clearInterval(int);
+            millisecond = hour = minute = second = 0;
+            document.getElementById('timetext').value = '00 Hour 00 Min 00 Sec 000 MSec';
+        }
+
+        //开始函数
+        function start() {
+            int = setInterval(timer, 50);//每隔50毫秒执行一次timer函数
+        }
+        //计时函数
+        function timer() {
+            millisecond = millisecond + 50;
+            if (millisecond >= 1000) {
+                millisecond = 0;
+                second = second + 1;
+            }
+            if (second >= 60) {
+                second = 0;
+                minute = minute + 1;
+            }
+
+            if (minute >= 60) {
+                minute = 0;
+                hour = hour + 1;
+            }
+            document.getElementById('timetext').value = hour + '时' + minute + '分' + second + '秒' + millisecond + '毫秒';
+
+        }
+        //暂停函数
+        function stop() {
+            window.clearInterval(int);
+        }
+    </script>
+</body>
+
+</html>

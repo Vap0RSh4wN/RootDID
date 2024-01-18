@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Express.js Example</title>
+</head>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    button,
+    p,
+    img {
+        display: block;
+    }
+</style>
+
+<body>
+    <button onclick="document.getElementById('verify').style.display='block'">Identity Verification</button>
+    <br></br>
+    <p id="verify" style="display: none;">Passed!</p>
+    <br></br>
+    <button onclick="document.getElementById('myImage').style.display='block'">Generate QR Code</button>
+    <br></br>
+    <img id="myImage" alt="Base64 Image" style="display: none;">
+    <br></br>
+    <button onclick="document.getElementById('salt').style.display='block'">Generate Salt</button>
+    <br></br>
+    <p id="salt" style="display: none;"></p>
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        socket.on('updateHTML', function (html) {
+            // 更新页面的 HTML
+            document.documentElement.innerHTML = html;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 接收到图片数据后，触发显示图片的事件
+            socket.emit('showImage');
+        });
+    </script>
+</body>
+
+</html>
